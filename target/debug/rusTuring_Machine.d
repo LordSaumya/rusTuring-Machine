@@ -1,0 +1,1 @@
+C:\Users\Saumya\Desktop\Coding\Rust\rusTuring-Machine\target\debug\rusTuring_Machine.exe: C:\Users\Saumya\Desktop\Coding\Rust\rusTuring-Machine\src\main.rs C:\Users\Saumya\Desktop\Coding\Rust\rusTuring-Machine\src\turing_machine.rs
