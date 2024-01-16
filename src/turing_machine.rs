@@ -5,7 +5,7 @@ pub mod turing_machine {
         pub tape: Vec<char>,
         pub ruleset: Vec<Rule>,
         pub state: String,
-        pub time_limit: u64,
+        pub time_limit: u128,
         pub rw_head: u64,
     }
 
@@ -22,6 +22,7 @@ pub mod turing_machine {
     pub enum Action {
         Write(char),
         Move(MoveHead),
+        Halt
     }
 
     pub enum MoveHead {
@@ -34,10 +35,10 @@ pub mod turing_machine {
         pub fn new(
             ruleset: Vec<Rule>,
             state: String,
-            time_limit: u64,
+            time_limit: u128,
         ) -> TuringMachine {
             TuringMachine {
-                tape: Vec::new(),
+                tape: vec![' '; 1],
                 ruleset,
                 state,
                 time_limit,
@@ -45,9 +46,9 @@ pub mod turing_machine {
             }
         }
 
-        pub fn execute(mut self) {
+        pub fn execute(mut self) -> TuringMachine {
             let start_time: Instant = Instant::now();
-            let mut current_time: u64 = start_time.elapsed().as_secs();
+            let mut current_time: u128 = start_time.elapsed().as_millis();
 
             while current_time < self.time_limit {
                 let current_state: &String = &self.state.clone();
@@ -77,13 +78,18 @@ pub mod turing_machine {
                                         }
                                         MoveHead::None => {}
                                     },
+                                    Action::Halt => {
+                                        return self;
+                                    }
                                 }
                             }
                         }
+                        self.state = rule.next_state.clone();
                     }
                 }
-                current_time = start_time.elapsed().as_secs();
+                current_time = start_time.elapsed().as_millis();
             }
+            self
         }
     }
 
@@ -122,6 +128,10 @@ pub mod turing_machine {
 
         pub fn write(symbol: char) -> Action {
             Action::Write(symbol)
+        }
+
+        pub fn halt() -> Action {
+            Action::Halt
         }
     }
 }
